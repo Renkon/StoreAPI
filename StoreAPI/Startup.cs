@@ -24,13 +24,17 @@ namespace StoreAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var mongoClient = new MongoClient(this.Configuration["MongoDbUri"]);
+
             services.AddControllers();
             services.AddSwaggerGen();
 
-            services.AddSingleton<IMongoClient>(new MongoClient(this.Configuration["MongoDbUri"]));
+            services.AddLogging();
+
+            services.AddSingleton<IMongoClient>(mongoClient);
             services.AddSingleton<IRepository, Repository>();
 
-            services.AddLogging();
+            new DatabaseConfigurationAssistant(mongoClient, this.Configuration["MongoDbDatabaseName"]).SetupDatabase();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
