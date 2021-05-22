@@ -24,7 +24,7 @@ namespace StoreAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var mongoClient = new MongoClient(this.Configuration["MongoDbUri"]);
+            var mongoClient = new MongoClient(this.Configuration[Constants.Configuration.ConnectionString]);
 
             services.AddControllers();
             services.AddSwaggerGen();
@@ -34,7 +34,7 @@ namespace StoreAPI
             services.AddSingleton<IMongoClient>(mongoClient);
             services.AddSingleton<IRepository, Repository>();
 
-            new DatabaseConfigurationAssistant(mongoClient, this.Configuration["MongoDbDatabaseName"]).SetupDatabase();
+            new DatabaseConfigurationAssistant(mongoClient, this.Configuration[Constants.Configuration.DatabaseName]).SetupDatabase();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,7 +54,7 @@ namespace StoreAPI
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Store API V1");
             });
 
             app.UseRouting();
