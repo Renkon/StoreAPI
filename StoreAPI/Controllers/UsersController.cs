@@ -34,11 +34,19 @@ namespace StoreAPI.Controllers
         [HttpGet("{nationalId}", Name = "GetUser")]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserDto>> GetUserAsync(string nationalId)
+        public async Task<ActionResult<UserDto>> GetUserAsync(int nationalId)
         {
             this.logger.LogTrace($"GET User with nationalId {nationalId}.");
-            // TODO.
-            return null;
+            
+            try
+            {
+                var user = await this.repository.GetUserAsync(nationalId);
+                return this.Ok(user);
+            }
+            catch (DocumentNotFoundException)
+            {
+                return this.NotFound();
+            }
         }
 
         /// <summary>
@@ -50,8 +58,9 @@ namespace StoreAPI.Controllers
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync()
         {
             this.logger.LogTrace("GET Users.");
-            // TODO.
-            return null;
+
+            var users = await this.repository.GetUsersAsync();
+            return this.Ok(users);
         }
 
         /// <summary>
@@ -114,11 +123,19 @@ namespace StoreAPI.Controllers
         [HttpDelete("{nationalId}", Name = "DeleteUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserDto>> DeleteUserAsync(int nationalId)
+        public async Task<ActionResult> DeleteUserAsync(int nationalId)
         {
             this.logger.LogTrace($"DELETE Users with nationalId {nationalId}.");
-            // TODO.
-            return null;
+            
+            try
+            {
+                await this.repository.DeleteUserAsync(nationalId);
+                return this.Ok();
+            }
+            catch (DocumentNotFoundException)
+            {
+                return this.NotFound();
+            }
         }
     }
 }

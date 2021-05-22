@@ -1,5 +1,6 @@
 ﻿using StoreAPI.Core.Dto;
 using StoreAPI.Core.Model.Payloads;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StoreAPI.Core.Interfaces.Repositories
@@ -9,5 +10,11 @@ namespace StoreAPI.Core.Interfaces.Repositories
         Task<UserDto> CreateUserAsync(CreateUserPayload userPayload);
 
         Task<UserDto> UpdateUserAsync(int nationalId, UpdateUserPayload userPayload);
+
+        Task DeleteUserAsync(int nationalId);
+
+        Task<UserDto> GetUserAsync(int nationalId);
+
+        Task<IEnumerable<UserDto>> GetUsersAsync();
     }
 }
