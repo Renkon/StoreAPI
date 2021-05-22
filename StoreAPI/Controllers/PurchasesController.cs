@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StoreAPI.Core.Model.Payloads;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,11 +12,11 @@ namespace StoreAPI.Controllers
     [Route("api/[controller]")]
     public class PurchasesController : ControllerBase
     {
-        private readonly ILogger<PurchasesController> _logger;
+        private readonly ILogger<PurchasesController> logger;
 
         public PurchasesController(ILogger<PurchasesController> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -32,6 +29,8 @@ namespace StoreAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> CreatePurchaseRecordAsync([FromBody] CreatePurchaseRecordPayload userPayload)
         {
+            this.logger.LogTrace($"POST PurchaseRecord.");
+
             // TODO.
             return null;
         }

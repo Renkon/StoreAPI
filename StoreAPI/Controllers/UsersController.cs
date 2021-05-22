@@ -12,11 +12,11 @@ namespace StoreAPI.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly ILogger<UsersController> _logger;
+        private readonly ILogger<UsersController> logger;
 
         public UsersController(ILogger<UsersController> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -26,11 +26,12 @@ namespace StoreAPI.Controllers
         /// <response code="200">Returns an user whose id matches the id of the request.</response>        
         /// <response code="404">The user was not found on the database.</response>        
         [HttpGet]
-        [Route("{id}")]
+        [Route("{nid}")]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> GetUserAsync(string id)
         {
+            this.logger.LogTrace($"GET User with id {id}.");
             // TODO.
             return null;
         }
@@ -43,6 +44,7 @@ namespace StoreAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<UserDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync()
         {
+            this.logger.LogTrace("GET Users.");
             // TODO.
             return null;
         }
@@ -59,6 +61,7 @@ namespace StoreAPI.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult<UserDto>> CreateUserAsync([FromBody]UpsertUserPayload userPayload)
         {
+            this.logger.LogTrace("POST User.");
             // TODO.
             return null;
         }
@@ -75,8 +78,10 @@ namespace StoreAPI.Controllers
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult<UserDto>> UpdateUserAsync(string id, [FromBody] UpsertUserPayload userPayload)
         {
+            this.logger.LogTrace($"PUT User with id {id}.");
             // TODO.
             return null;
         }
@@ -93,6 +98,7 @@ namespace StoreAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> DeleteUserAsync(string id)
         {
+            this.logger.LogTrace($"DELETE Users with id {id}.");
             // TODO.
             return null;
         }

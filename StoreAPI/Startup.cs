@@ -6,10 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using MongoDB.Driver;
+using StoreAPI.Core.Repositories;
+using StoreAPI.Data;
 
 namespace StoreAPI
 {
@@ -27,6 +26,11 @@ namespace StoreAPI
         {
             services.AddControllers();
             services.AddSwaggerGen();
+
+            services.AddSingleton<IMongoClient>(new MongoClient(this.Configuration["MongoDbUri"]));
+            services.AddSingleton<IRepository, Repository>();
+
+            services.AddLogging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

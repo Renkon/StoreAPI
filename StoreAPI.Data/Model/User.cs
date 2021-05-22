@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StoreAPI.Core.Dto
+﻿namespace StoreAPI.Data.Model
 {
-    public class UserDto
+    public class User
     {
         public string Id { get; set; }
 
