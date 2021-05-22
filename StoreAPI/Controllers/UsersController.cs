@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using StoreAPI.Core.Dto;
+using StoreAPI.Core.Exceptions;
+using StoreAPI.Core.Interfaces.Repositories;
 using StoreAPI.Core.Model.Payloads;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,26 +16,27 @@ namespace StoreAPI.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
+        private readonly IRepository repository;
         private readonly ILogger<UsersController> logger;
 
-        public UsersController(ILogger<UsersController> logger)
+        public UsersController(IRepository repository, ILogger<UsersController> logger)
         {
+            this.repository = repository;
             this.logger = logger;
         }
 
         /// <summary>
-        /// Retrieves an user by its id.
+        /// Retrieves an user by its nationalId.
         /// </summary>
-        /// <param name="id">Id of the user.</param>
-        /// <response code="200">Returns an user whose id matches the id of the request.</response>        
+        /// <param name="id">National id of the user.</param>
+        /// <response code="200">Returns an user whose id matches the nationalId of the request.</response>        
         /// <response code="404">The user was not found on the database.</response>        
-        [HttpGet]
-        [Route("{nid}")]
+        [HttpGet("{nationalId}", Name = "GetUser")]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserDto>> GetUserAsync(string id)
+        public async Task<ActionResult<UserDto>> GetUserAsync(string nationalId)
         {
-            this.logger.LogTrace($"GET User with id {id}.");
+            this.logger.LogTrace($"GET User with nationalId {nationalId}.");
             // TODO.
             return null;
         }
@@ -40,7 +45,7 @@ namespace StoreAPI.Controllers
         /// Retrieves a full list of all the users.
         /// </summary>
         /// <response code="200">Returns a list of users from the application.</response>        
-        [HttpGet]
+        [HttpGet(Name = "GetUsers")]
         [ProducesResponseType(typeof(IEnumerable<UserDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync()
         {
@@ -55,35 +60,49 @@ namespace StoreAPI.Controllers
         /// <param name="id">Id of the user.</param>
         /// <response code="201">Returns the newly created user.</response>        
         /// <response code="400">The payload received did not match the expected payload and thus the user was not created.</response>        
-        [HttpPost]
+        [HttpPost(Name = "CreateUser")]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<UserDto>> CreateUserAsync([FromBody]UpsertUserPayload userPayload)
+        public async Task<ActionResult<UserDto>> CreateUserAsync([FromBody]CreateUserPayload userPayload)
         {
             this.logger.LogTrace("POST User.");
-            // TODO.
-            return null;
+
+            try
+            {
+                var user = await this.repository.CreateUserAsync(userPayload);
+                return this.CreatedAtRoute("GetUser", new { user.NationalId }, user);
+            }
+            catch (MongoWriteException ex) when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey && ex.WriteError.Code == 11000)
+            {
+                return this.Conflict();
+            }
         }
 
         /// <summary>
         /// Updates an existing user on the platform.
         /// </summary>
-        /// <param name="id">Id of the user.</param>
+        /// <param name="id">NationalId of the user.</param>
         /// <response code="200">Returns the user that has been successfully modified.</response>        
         /// <response code="400">The payload received did not match the expected payload and thus the user was not created.</response>        
         /// <response code="404">The user was not found on the database.</response>
-        [HttpPut]
-        [Route("{id}")]
+        [HttpPut("{nationalId}", Name = "UpdateUser")]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<UserDto>> UpdateUserAsync(string id, [FromBody] UpsertUserPayload userPayload)
+        public async Task<ActionResult<UserDto>> UpdateUserAsync(int nationalId, [FromBody]UpdateUserPayload userPayload)
         {
-            this.logger.LogTrace($"PUT User with id {id}.");
-            // TODO.
-            return null;
+            this.logger.LogTrace($"PUT User with nationalId {nationalId}.");
+            
+            try
+            {
+                var user = await this.repository.UpdateUserAsync(nationalId, userPayload);
+                return this.Ok(user);
+            }
+            catch (DocumentNotFoundException)
+            {
+                return this.NotFound();
+            }
         }
 
         /// <summary>
@@ -92,13 +111,12 @@ namespace StoreAPI.Controllers
         /// <param name="id">Id of the user.</param>
         /// <response code="200">The user was successfully removed from the database.</response>        
         /// <response code="404">The user was not found on the database.</response>
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{nationalId}", Name = "DeleteUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserDto>> DeleteUserAsync(string id)
+        public async Task<ActionResult<UserDto>> DeleteUserAsync(int nationalId)
         {
-            this.logger.LogTrace($"DELETE Users with id {id}.");
+            this.logger.LogTrace($"DELETE Users with nationalId {nationalId}.");
             // TODO.
             return null;
         }

@@ -1,6 +1,6 @@
 ﻿namespace StoreAPI.Core.Model.Payloads
 {
-    public class UpsertUserPayload
+    public class CreateUserPayload
     {
         public string FirstName { get; set; }
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace StoreAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class PurchasesController : ControllerBase
     {
         private readonly ILogger<PurchasesController> logger;

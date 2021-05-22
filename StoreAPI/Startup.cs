@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using StoreAPI.Core.Repositories;
+using StoreAPI.Core.Interfaces.Repositories;
 using StoreAPI.Data;
+using System.Linq;
 
 namespace StoreAPI
 {
@@ -28,7 +26,6 @@ namespace StoreAPI
 
             services.AddControllers();
             services.AddSwaggerGen();
-
             services.AddLogging();
 
             services.AddSingleton<IMongoClient>(mongoClient);

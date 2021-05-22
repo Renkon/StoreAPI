@@ -25,6 +25,9 @@ namespace StoreAPI.Data
 
             this.CreateCollectionIfNotExists(database, Constants.Collections.Users);
             this.CreateCollectionIfNotExists(database, Constants.Collections.PurchaseRecords);
+
+            // Given that every person has got a national identifier, we need a unique index.
+            this.CreateAscendingUniqueIndex(database, Constants.Collections.Users, "nationalId");
         }
 
         // Not asynchronous method as this is executed from Startup.
@@ -43,6 +46,17 @@ namespace StoreAPI.Data
             {
                 database.CreateCollection(collectionName);
             }
+        }
+
+        private void CreateAscendingUniqueIndex(IMongoDatabase database, string collectionName, string property)
+        {
+            var collection = database.GetCollection<dynamic>(collectionName);
+            var indexKeysDefinition = Builders<dynamic>.IndexKeys.Ascending(property);
+            var indexOptions = new CreateIndexOptions
+            {
+                Unique = true,
+            };
+            collection.Indexes.CreateOne(new CreateIndexModel<dynamic>(indexKeysDefinition, indexOptions));
         }
     }
 }
