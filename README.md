@@ -8,7 +8,7 @@ Make sure that the MongoDbUri property is correctly set to a MongoDb connection 
 ```
 mongodb+srv://{user}:{password}@{host}
 ```
-
+This property is set in `StoreAPI/appsettings.json` and `StoreAPI.Data.Test/appsettings.json`.
 The application automatically sets up the database and the collection.
 
 # Endpoints
