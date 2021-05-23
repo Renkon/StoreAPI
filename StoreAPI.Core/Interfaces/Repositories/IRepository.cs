@@ -16,5 +16,9 @@ namespace StoreAPI.Core.Interfaces.Repositories
         Task<UserDto> GetUserAsync(int nationalId);
 
         Task<IEnumerable<UserDto>> GetUsersAsync();
+
+        Task<IEnumerable<UserDto>> GetMoreThanAverageSpentUsersAsync();
+
+        Task PerformPurchaseAsync(CreatePurchaseRecordPayload purchaseRecordPayload);
     }
 }

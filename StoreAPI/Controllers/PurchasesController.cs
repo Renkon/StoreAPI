@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using StoreAPI.Core.Exceptions;
+using StoreAPI.Core.Interfaces.Repositories;
 using StoreAPI.Core.Model.Payloads;
 using System.Threading.Tasks;
 
@@ -12,27 +14,38 @@ namespace StoreAPI.Controllers
     [Route("[controller]")]
     public class PurchasesController : ControllerBase
     {
+        private readonly IRepository repository;
         private readonly ILogger<PurchasesController> logger;
 
-        public PurchasesController(ILogger<PurchasesController> logger)
+        public PurchasesController(IRepository repository, ILogger<PurchasesController> logger)
         {
+            this.repository = repository;
             this.logger = logger;
         }
 
         /// <summary>
         /// Creates a new purchase record.
         /// </summary>
-        /// <response code="201">The purchase record has successfully been stored.</response>        
+        /// <response code="200">The purchase record has successfully been stored.</response>        
         /// <response code="400">The payload received did not match the expected payload and thus the user was not created.</response>        
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        /// <response code="404">The user that performed the purchase does not exist.</response>
+        [HttpPost(Name = "CreatePurchase")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> CreatePurchaseRecordAsync([FromBody] CreatePurchaseRecordPayload userPayload)
+        public async Task<ActionResult> CreatePurchaseRecordAsync([FromBody] CreatePurchaseRecordPayload purchaseRecordPayload)
         {
             this.logger.LogTrace($"POST PurchaseRecord.");
 
-            // TODO.
-            return null;
+            try
+            {
+                await this.repository.PerformPurchaseAsync(purchaseRecordPayload);
+                return this.Ok();
+            }
+            catch (DocumentNotFoundException<int>)
+            {
+                return this.NotFound();
+            }
         }
     }
 }

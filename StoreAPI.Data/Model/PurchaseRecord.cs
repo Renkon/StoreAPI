@@ -8,8 +8,8 @@ namespace StoreAPI.Data.Model
         [BsonId]
         public ObjectId Id { get; set; }
 
-        [BsonElement("userId")]
-        public string UserId { get; set; }
+        [BsonElement("userNationalId")]
+        public int UserNationalId { get; set; }
 
         [BsonElement("product")]
         public string Product { get; set; }

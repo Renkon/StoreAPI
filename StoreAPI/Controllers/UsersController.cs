@@ -43,7 +43,7 @@ namespace StoreAPI.Controllers
                 var user = await this.repository.GetUserAsync(nationalId);
                 return this.Ok(user);
             }
-            catch (DocumentNotFoundException)
+            catch (DocumentNotFoundException<int>)
             {
                 return this.NotFound();
             }
@@ -60,6 +60,20 @@ namespace StoreAPI.Controllers
             this.logger.LogTrace("GET Users.");
 
             var users = await this.repository.GetUsersAsync();
+            return this.Ok(users);
+        }
+
+        /// <summary>
+        /// Retrieves the user with the most money spent.
+        /// </summary>
+        /// <response code="200">Returns the users with more money spent than average</response>        
+        [HttpGet("MoreThanAvgSpent", Name = "GetMoreThanAverageUsers")]
+        [ProducesResponseType(typeof(IEnumerable<UserDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetMoreThanAverageSpentUsersAsync()
+        {
+            this.logger.LogTrace("GET Users/MoreThanAvgSpent.");
+
+            var users = await this.repository.GetMoreThanAverageSpentUsersAsync();
             return this.Ok(users);
         }
 
@@ -108,7 +122,7 @@ namespace StoreAPI.Controllers
                 var user = await this.repository.UpdateUserAsync(nationalId, userPayload);
                 return this.Ok(user);
             }
-            catch (DocumentNotFoundException)
+            catch (DocumentNotFoundException<int>)
             {
                 return this.NotFound();
             }
@@ -132,7 +146,7 @@ namespace StoreAPI.Controllers
                 await this.repository.DeleteUserAsync(nationalId);
                 return this.Ok();
             }
-            catch (DocumentNotFoundException)
+            catch (DocumentNotFoundException<int>)
             {
                 return this.NotFound();
             }
