@@ -193,7 +193,7 @@ namespace StoreAPI.Data
                         {
                             { "input", "$elems" },
                             { "as", "element" },
-                            { "cond", new BsonDocument("$gte",
+                            { "cond", new BsonDocument("$gt",
                                 new BsonArray
                                 {
                                     "$$element.moneySpent",
