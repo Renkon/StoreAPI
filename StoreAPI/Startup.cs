@@ -6,7 +6,6 @@ using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using StoreAPI.Core.Interfaces.Repositories;
 using StoreAPI.Data;
-using System.Linq;
 
 namespace StoreAPI
 {
