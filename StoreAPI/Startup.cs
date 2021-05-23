@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using StoreAPI.Core.Interfaces.Repositories;
-using StoreAPI.Data;
+using StoreAPI.Core;
 
 namespace StoreAPI
 {

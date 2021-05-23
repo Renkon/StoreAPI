@@ -5,13 +5,13 @@ using MongoDB.Driver;
 using StoreAPI.Core.Exceptions;
 using StoreAPI.Core.Interfaces.Repositories;
 using StoreAPI.Core.Model.Payloads;
-using StoreAPI.Data;
+using StoreAPI.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StoreAPI.Data.Test
+namespace StoreAPI.Core.Test
 {
     // Integration tests to ensure MongoDB works as expected.
     [TestClass]

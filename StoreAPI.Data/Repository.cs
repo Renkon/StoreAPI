@@ -7,13 +7,13 @@ using StoreAPI.Core.Dto;
 using StoreAPI.Core.Exceptions;
 using StoreAPI.Core.Interfaces.Repositories;
 using StoreAPI.Core.Model.Payloads;
-using StoreAPI.Data.Model;
+using StoreAPI.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StoreAPI.Data
+namespace StoreAPI.Core
 {
     public class Repository : IRepository
     {

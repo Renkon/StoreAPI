@@ -1,9 +1,9 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace StoreAPI.Data.Model
+namespace StoreAPI.Core.Model
 {
-    class PurchaseRecord
+    public class PurchaseRecord
     {
         [BsonId]
         public ObjectId Id { get; set; }

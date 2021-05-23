@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace StoreAPI.Data
+namespace StoreAPI.Core
 {
     public class DatabaseConfigurationAssistant
     {
