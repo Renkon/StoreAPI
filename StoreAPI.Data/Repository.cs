@@ -113,7 +113,7 @@ namespace StoreAPI.Data
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
-            this.logger.LogTrace("Öbtaining user instances.");
+            this.logger.LogTrace("Obtaining user instances.");
 
             var userList = await this.GetUsersCollection().Find(Builders<User>.Filter.Empty).ToListAsync();
 
@@ -215,6 +215,16 @@ namespace StoreAPI.Data
                 .Select(this.GetUserDto);
         }
 
+        public async Task<IEnumerable<PurchaseRecordDto>> GetPurchaseRecordsAsync()
+        {
+            this.logger.LogTrace("Obtaining purchase record instances.");
+
+            var userList = await this.GetPurchaseRecordsCollection().Find(Builders<PurchaseRecord>.Filter.Empty).ToListAsync();
+
+            this.logger.LogTrace("Creating purchase record dto instances.");
+            return userList.Select(this.GetPurchaseRecordDto);
+        }
+
         private IMongoCollection<User> GetUsersCollection()
             => this.GetDatabase().GetCollection<User>(Constants.Collections.Users);
 
@@ -243,6 +253,17 @@ namespace StoreAPI.Data
                 LastName = user.LastName,
                 MoneySpent = user.MoneySpent,
                 NationalId = user.NationalId,
+            };
+        }
+
+        private PurchaseRecordDto GetPurchaseRecordDto(PurchaseRecord purchaseRecord)
+        {
+            return new PurchaseRecordDto
+            {
+                UserNationalId = purchaseRecord.UserNationalId,
+                Product = purchaseRecord.Product,
+                Cost = purchaseRecord.Cost,
+                Quantity = purchaseRecord.Quantity
             };
         }
     }

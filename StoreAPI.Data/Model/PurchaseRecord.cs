@@ -19,7 +19,5 @@ namespace StoreAPI.Data.Model
 
         [BsonElement("cost")]
         public double Cost { get; set; }
-
-        public double TotalCost => Cost * Quantity;
     }
 }

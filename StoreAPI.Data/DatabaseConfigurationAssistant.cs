@@ -30,6 +30,11 @@ namespace StoreAPI.Data
             this.CreateAscendingUniqueIndex(database, Constants.Collections.Users, "nationalId");
         }
 
+        public void RemoveDatabase()
+        {
+            this.mongoClient.DropDatabase(databaseName);
+        }
+
         // Not asynchronous method as this is executed from Startup.
         private bool CollectionExists(IMongoDatabase database, string collectionName)
         {
