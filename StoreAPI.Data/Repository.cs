@@ -209,6 +209,12 @@ namespace StoreAPI.Core
             var pipelineResult = await this.GetUsersCollection().Aggregate(PipelineDefinition<User, BsonDocument>.Create(group, project)).ToListAsync();
 
             this.logger.LogTrace("Retrieving elements from pipeline and mapping to dto.");
+
+            if (!pipelineResult.Any())
+            {
+                return Enumerable.Empty<UserDto>();
+            }
+
             return pipelineResult.First()["elems"]
                 .AsBsonArray
                 .Select(u => BsonSerializer.Deserialize<User>(u.AsBsonDocument))

@@ -202,7 +202,7 @@ namespace StoreAPI.Core.Test
         }
 
         [TestMethod]
-        public async Task TestGetGetMoreThanAverageSpentUsersAsync()
+        public async Task TestGetMoreThanAverageSpentUsersAsync()
         {
             var identifiers = new List<int> { 17246710, 21698109 };
             var expectedCost = new List<double> { 8.75, 9 };
@@ -215,6 +215,21 @@ namespace StoreAPI.Core.Test
                 Assert.AreEqual(identifiers.ElementAt(i), users.ElementAt(i).NationalId);
                 Assert.AreEqual(expectedCost.ElementAt(i), users.ElementAt(i).MoneySpent);
             }
+        }
+
+        [TestMethod]
+        public async Task TestEmptyGetMoreThanAverageSpentUsersAsync()
+        {
+            var identifiers = new List<int> { 17246710, 21698109, 10953291 };
+
+            foreach (var id in identifiers)
+            {
+                await this.repository.DeleteUserAsync(id);
+            }
+
+            var users = await this.repository.GetMoreThanAverageSpentUsersAsync();
+
+            Assert.AreEqual(0, users.Count());
         }
 
         private async Task SetupMockDataAsync()
